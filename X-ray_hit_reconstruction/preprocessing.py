@@ -63,7 +63,7 @@ class Xraydata():
         of a single event to be given as input to the neural network.
         Before stacking data inside an array, it is necessary to preprocess them.
         Central pixel position is converted from logical coordinates (col, row) to 
-        cartesian coordinates (x_max,y_max), PHA array is rearranged in a standard ordering. 
+        cartesian coordinates (x_max, y_max), PHA array is rearranged in a standard ordering. 
         Consider the following legend: 
         ur = up-right, r = right, dr = down-right, d = down, dl = down-left, l = left, ul = upper-left.
         The output array has the data in the following order:
@@ -75,7 +75,7 @@ class Xraydata():
         for i, event in tqdm(enumerate(self.input_file)):
             # Pixel logical coordinates storing...
             coordinates = circular_crown_logical_coordinates(event.column, event.row, self.grid)
-            # ... conversion from logical to ADC coordinates to standardize the order ...
+            # ... conversion from logical to ADC coordinates for standardizing the order ...
             adc_channel_order = [self.grid.adc_channel(_col, _row) for _col, _row in coordinates]
             # ... storing the re-ordered PHA list ...
             pha = event.pha[adc_channel_order]
