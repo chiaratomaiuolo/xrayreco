@@ -87,7 +87,7 @@ class Xraydata():
             x, y = self.grid.pixel_to_world(np.array(x_logical),np.array(y_logical))
             # ... then stack the coordinates with its corresponding signal value
             # and append the result to the data list.
-            events_data.append(np.stack((zip(pha, x, y)), axis=0))
+            events_data.append(np.stack((list(zip(pha, x, y))), axis=0))
         # Return the events_data list of arrays.
         return np.array(events_data)
 
@@ -109,15 +109,15 @@ class Xraydata():
         # MC positions are re-scaled with respect to (x_max, y_max), then
         # zipped and stacked for obtaining the desired y format [x, y] for
         # every column of the returned array.
-        position_target_array = np.stack((zip(x_hit-x_max, y_hit-y_max)), axis=0)
+        target_array = np.stack((list(zip(energy_target_array, x_hit-x_max, y_hit-y_max))), axis=0)
         # The returned list contains the energies and the positions of every
         # simulated event.
-        return [energy_target_array, position_target_array]
+        return target_array
 
 
 if __name__ == "__main__":
     input_file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum_20enc_srcsigma200um.h5'
     data = Xraydata(input_file_path)
-    print(data.input_events_data()[1])
-    print(data.target_data())
+    print(data.input_events_data()[0])
+    print(data.target_data()[1])
     del data
