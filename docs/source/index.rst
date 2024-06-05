@@ -3,9 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-xray_hit_reconstruction
+xrayreco
 =========================
-`xray_hit_reconstruction` is a project for reconstructing the incident X-rays 
+`xrayreco` is a project for reconstructing the incident X-rays 
 energies and hit position on a solid state detector using a neural network. 
 
 Contents

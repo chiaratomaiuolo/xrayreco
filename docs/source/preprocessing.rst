@@ -1,8 +1,8 @@
-:mod:`Xray_hit_reconstruction.preprocessing` --- Data preprocessing facilities
+:mod:`xrayreco.preprocessing` --- Data preprocessing facilities
 ==============================================================================
 
 
 Module documentation
 --------------------
 
-.. automodule:: Xray_hit_reconstruction.preprocessing
+.. automodule:: xrayreco.preprocessing
