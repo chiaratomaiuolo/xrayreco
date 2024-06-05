@@ -1,6 +1,6 @@
 import unittest
 
-from Xray_hit_reconstruction.preprocessing import Xraydata
+from xrayreco.preprocessing import Xraydata
 
 
 class TestPreprocessingChain(unittest.TestCase):
