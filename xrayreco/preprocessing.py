@@ -1,16 +1,17 @@
-
-import numpy as np
-from tqdm import tqdm
-from typing import Tuple
-
-from hexsample.fileio import DigiInputFileCircular
-from hexsample.hexagon import HexagonalGrid, HexagonalLayout
-from hexsample.readout import HexagonalReadoutMode
-
 """Preprocessing functions.
 """
 
-def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGrid) -> Tuple[np.ndarray, np.ndarray]:
+from typing import Tuple
+
+import numpy as np
+from tqdm import tqdm
+
+from hexsample.fileio import DigiInputFileCircular
+from hexsample.hexagon import HexagonalGrid, HexagonalLayout
+
+
+def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGrid)\
+    -> Tuple[np.ndarray, np.ndarray]:
     """This function returns a set of 7 tuples (col, row) containing the logical
     coordinates of the pixels in a DigiCircularEvent in a standard ordering.
     Consider the following legend: 
@@ -29,17 +30,23 @@ def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGri
         class containing the informations about the hexagonal grid features and
         the methods for localizing the neighbors of a given pixel.
     """
-    central_coordinates = [(column, row)]
-    coordinates = central_coordinates + [(c, r) for c, r in grid.neighbors(column, row)]
+    coordinates = [(column, row)] + [(c, r) for c, r in grid.neighbors(column, row)]
     return coordinates
 
-
 class Xraydata():
-    def __init__(self, input_file_path: str):
-        """Constructor
+    """Class that preprocesses data from a .h5 file and creates the input arrays
+    for the NN.
+    """
+    def __init__(self, file_path: str):
+        """Class constructor
+
+        Arguments
+        ---------
+        file_path : str
+            String containing the path to the .h5 file to be processed.
         """
         # Initializing the DigiEventCircular from the .h5 input file
-        self.input_file = DigiInputFileCircular(input_file_path)
+        self.input_file = DigiInputFileCircular(file_path)
         # Initializing the HexagonalGrid
         # Extrapolation of informations of the HexagonalGrid from the file header
         layout = self.input_file.root.header._v_attrs['layout']
@@ -49,7 +56,7 @@ class Xraydata():
         # Construction of the HexagonalGrid. This is needed because the coordinates
         # of the adjacent pixels of a given one depends on the layout.
         self.grid = HexagonalGrid(HexagonalLayout(layout), numcolumns, numrows, pitch)
-    
+
     def __del__(self):
         """Instance destructor. This is needed for the proper closing of the 
         input data file.
@@ -65,9 +72,10 @@ class Xraydata():
         Central pixel position is converted from logical coordinates (col, row) to 
         cartesian coordinates (x_max, y_max), PHA array is rearranged in a standard ordering. 
         Consider the following legend: 
-        ur = up-right, r = right, dr = down-right, d = down, dl = down-left, l = left, ul = upper-left.
+        ur = up-right, r = right, dr = down-right, 
+        dl = down-left, l = left, ul = upper-left.
         The output array has the data in the following order:
-        [central pha, ur pha, r pha, dr pha, d pha, dl pha, l pha, ul pha, central x, central y]
+        [central pha, ur pha, r pha, dr pha, dl pha, l pha, ul pha, central x, central y]
         """
         # Extrapolation of data from the DigiEventCircular events
         events_data = []
@@ -100,9 +108,9 @@ class Xraydata():
         energy_target_array = self.input_file.mc_column('energy')
         x_hit = self.input_file.mc_column('absx')
         y_hit = self.input_file.mc_column('absy')
-        # Rescale of hit coordinates with respect to the coordinates of the 
+        # Rescale of hit coordinates with respect to the coordinates of the
         # maximum signal pixel
-        # Extrapolating columns, rows of event 
+        # Extrapolating columns, rows of event
         cols = np.array([event.column for event in self.input_file])
         rows = np.array([event.row for event in self.input_file])
         x_max, y_max = self.grid.pixel_to_world(cols, rows)
@@ -114,9 +122,9 @@ class Xraydata():
         # simulated event.
         return target_array
 
-
 if __name__ == "__main__":
-    input_file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum_20enc_srcsigma200um.h5'
+    input_file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum\
+        _20enc_srcsigma200um.h5'
     data = Xraydata(input_file_path)
     print(data.input_events_data()[0])
     print(data.target_data()[1])
