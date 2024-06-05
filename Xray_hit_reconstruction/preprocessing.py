@@ -21,11 +21,11 @@ def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGri
 
     Arguments
     ---------
-    - column : int
+    column : int
         central pixel column in pixel logical coordinates;
-    - row : int
+    row : int
         central pixel row in pixel logical coordinates;
-    - grid : HexagonalGrid
+    grid : HexagonalGrid
         class containing the informations about the hexagonal grid features and
         the methods for localizing the neighbors of a given pixel.
     """
@@ -91,7 +91,7 @@ class Xraydata():
         # Return the events_data list of arrays.
         return np.array(events_data)
 
-    def target_data(self) -> list:
+    def target_data(self) -> np.array:
         """This function returns a numpy array containing the target quantities
         extracted by the MC truth of the events. 
         """

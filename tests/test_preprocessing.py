@@ -6,8 +6,9 @@ from Xray_hit_reconstruction.preprocessing import Xraydata
 class TestPreprocessingChain(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         """ Class constructor.
+        The constructor opens a specific simulation and extrapolates the signal
+        data and the MC truth using the specific methods of the Xraydata class.
         """
-        print('setup')
         super(TestPreprocessingChain, self).__init__(*args, **kwargs)
         file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum_20enc_srcsigma200um.h5'
         self.data = Xraydata(file_path)
