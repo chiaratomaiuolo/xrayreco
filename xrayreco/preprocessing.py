@@ -92,7 +92,7 @@ class Xraydata():
             # ... and converting from logical to physical coordinates ...
             # (note that the function pixel_to_world() needs the conversion
             # from tuples to numpy array)
-            x, y = self.grid.pixel_to_world(np.array(x_logical),np.array(y_logical))
+            x, y = self.grid.pixel_to_world(np.array(x_logical), np.array(y_logical))
             # ... then stack the coordinates with its corresponding signal value
             # and append the result to the data list.
             events_data.append(np.stack((list(zip(pha, x, y))), axis=0))
@@ -108,6 +108,8 @@ class Xraydata():
         energy_target_array = self.input_file.mc_column('energy')
         x_hit = self.input_file.mc_column('absx')
         y_hit = self.input_file.mc_column('absy')
+        # Defining the target array containing the energies
+        target_energy = np.array(energy_target_array)
         # Rescale of hit coordinates with respect to the coordinates of the
         # maximum signal pixel
         # Extrapolating columns, rows of event
@@ -115,12 +117,18 @@ class Xraydata():
         rows = np.array([event.row for event in self.input_file])
         x_max, y_max = self.grid.pixel_to_world(cols, rows)
         # MC positions are re-scaled with respect to (x_max, y_max), then
-        # zipped and stacked for obtaining the desired y format [x, y] for
+        # zipped and stacked for obtaining the desired format [x, y] for
         # every column of the returned array.
-        target_array = np.stack((list(zip(energy_target_array, x_hit-x_max, y_hit-y_max))), axis=0)
+        target_coordinates = np.stack((list(zip(x_hit-x_max, y_hit-y_max))), axis=0)
+        #target_array = np.stack((list(zip(energy_target_array, x_hit-x_max, y_hit-y_max))), axis=0)
         # The returned list contains the energies and the positions of every
         # simulated event.
-        return target_array
+        return target_energy, target_coordinates
+    
+    def close_input_file():
+        ''' Method for closing the input file
+        '''
+        self.input_file.close()
 
 if __name__ == "__main__":
     input_file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum\
