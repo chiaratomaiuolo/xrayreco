@@ -81,7 +81,7 @@ class Xraydata():
         events_data = []
         # Looping on events: extrapolating data and converting into required format
         for i, event in tqdm(enumerate(self.input_file)):
-            # Pixel logical coordinates storing...
+            # Storing of pixel's logical coordinates...
             coordinates = circular_crown_logical_coordinates(event.column, event.row, self.grid)
             # ... conversion from logical to ADC coordinates for standardizing the order ...
             adc_channel_order = [self.grid.adc_channel(_col, _row) for _col, _row in coordinates]
@@ -119,21 +119,14 @@ class Xraydata():
         # MC positions are re-scaled with respect to (x_max, y_max), then
         # zipped and stacked for obtaining the desired format [x, y] for
         # every column of the returned array.
+        # The positions are taken as shift from the central pixel
         target_coordinates = np.stack((list(zip(x_hit-x_max, y_hit-y_max))), axis=0)
-        #target_array = np.stack((list(zip(energy_target_array, x_hit-x_max, y_hit-y_max))), axis=0)
+        target_array = np.stack((list(zip(energy_target_array, x_hit, y_hit))), axis=0)
         # The returned list contains the energies and the positions of every
         # simulated event.
-        return target_energy, target_coordinates
+        return target_array
     
-    def close_input_file():
+    def close_input_file(self):
         ''' Method for closing the input file
         '''
         self.input_file.close()
-
-if __name__ == "__main__":
-    input_file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum\
-        _20enc_srcsigma200um.h5'
-    data = Xraydata(input_file_path)
-    print(data.input_events_data()[0])
-    print(data.target_data()[1])
-    del data
