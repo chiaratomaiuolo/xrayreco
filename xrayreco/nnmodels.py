@@ -14,6 +14,7 @@ def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
     '''Definition of the Deep Neural Network model for energy reconstruction.
     This function defines the chosen architecture for the NN and returns the
     (untrained) keras.Model.
+
     Arguments
     ---------
     input_shape : Tuple
@@ -57,6 +58,7 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
     '''Definition of the Deep Neural Network model for hit coordinates [x,y] 
     reconstruction. This function defines the chosen architecture for the NN
     and returns the (untrained) keras.Model.
+    
     Arguments
     ---------
     input_shape : Tuple
