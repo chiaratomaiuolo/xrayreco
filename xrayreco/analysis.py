@@ -12,3 +12,5 @@ def doublegaussian(x: float, N1: float, mu1: float, sigma1: float, N2: float,
     return N1*(np.exp(-((x-mu1)**2)/(2*sigma1**2))) + N2*(np.exp(-((x-mu2)**2)/(2*sigma2**2)))
 
 def resolution_evaluation():
+    ''' The following function performs the evaluation of 
+    '''
