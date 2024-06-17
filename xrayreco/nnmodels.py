@@ -50,7 +50,11 @@ def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
             #If the file is not compatible with the shape of the model, 
             # the model without any training is provided (as if 
             # path_to_weights wasn't provided).
+            model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
             return model_e
+        model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
+    else:
+        model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
     return model_e
 
 
@@ -94,7 +98,11 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
             #If the file is not compatible with the shape of the model, 
             # the model without any training is provided (as if 
             # path_to_weights wasn't provided).
+            model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
             return model_xy
+        model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
+    else:
+        model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
     return model_xy
 
 
