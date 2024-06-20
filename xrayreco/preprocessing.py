@@ -65,6 +65,21 @@ class Xraydata():
         self.input_file.close()
         # ... and then deleting the class instance. 
 
+    def highest_pixel_coordinates(self) -> np.array:
+        """This function returns a numpy array containing the physical coordinates
+        of the highest pixel (the one that defines the position of the cluster). 
+        This function is not useful for the NN intself, instead for performance 
+        evaluation tasks.
+        """
+        # Creating lists for storing the x and y coordinates
+        x = []
+        y = []
+        for evt in self.input_file:
+            x_tmp, y_tmp = self.grid.pixel_to_world(evt.column, evt.row)
+            x.append(x_tmp)
+            y.append(y_tmp)
+        return x, y
+            
     def input_events_data(self) -> np.array:
         """This function returns a numpy array containing in every row the data 
         of a single event to be given as input to the neural network.
@@ -95,7 +110,7 @@ class Xraydata():
             x, y = self.grid.pixel_to_world(np.array(x_logical), np.array(y_logical))
             # ... then stack the coordinates with its corresponding signal value
             # and append the result to the data list.
-            events_data.append(np.stack((list(zip(pha, x, y))), axis=0))
+            events_data.append(np.stack((list(zip(pha, x-x[0], y-y[0]))), axis=0))
         # Return the events_data list of arrays.
         return np.array(events_data)
 
@@ -121,10 +136,11 @@ class Xraydata():
         # every column of the returned array.
         # The positions are taken as shift from the central pixel
         target_coordinates = np.stack((list(zip(x_hit-x_max, y_hit-y_max))), axis=0)
-        target_array = np.stack((list(zip(energy_target_array, x_hit, y_hit))), axis=0)
+        target_array = np.stack((list(zip(energy_target_array, x_hit-x_max, y_hit-y_max))), axis=0)
         # The returned list contains the energies and the positions of every
         # simulated event.
         return target_array
+
     
     def close_input_file(self):
         ''' Method for closing the input file
