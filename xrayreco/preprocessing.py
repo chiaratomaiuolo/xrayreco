@@ -64,6 +64,15 @@ class Xraydata():
         # Closing the input file ...
         self.input_file.close()
         # ... and then deleting the class instance. 
+    
+    def __repr__(self) -> str:
+        """Printing the general informations about the simulation
+        """
+        group_path = '/header'
+        group = self.input_file.get_node(group_path)
+        for attr_name in group._v_attrs._f_list():
+            print(f'{attr_name}: {group._v_attrs[attr_name]}')
+        return ''
 
     def highest_pixel_coordinates(self) -> np.array:
         """This function returns a numpy array containing the physical coordinates
@@ -146,3 +155,14 @@ class Xraydata():
         ''' Method for closing the input file
         '''
         self.input_file.close()
+
+if __name__ == "__main__":
+    # Loading an hexsample simulation and storing its content into an Xraydata object
+    # The following simulation is a simulation with no electronic noise.
+    file_path = '/Users/chiara/hexsampledata/hxsim_20ENC.h5'
+    # Creating an istance of the class Xraydata that contains the data preprocessing methods
+    data = Xraydata(file_path)
+    print(data)
+
+    del data
+
