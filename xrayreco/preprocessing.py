@@ -74,6 +74,7 @@ class Xraydata():
             print(f'{attr_name}: {group._v_attrs[attr_name]}')
         return ''
 
+    @staticmethod
     def highest_pixel_coordinates(self) -> np.array:
         """This function returns a numpy array containing the physical coordinates
         of the highest pixel (the one that defines the position of the cluster). 
@@ -88,8 +89,9 @@ class Xraydata():
             x.append(x_tmp)
             y.append(y_tmp)
         return x, y
-            
-    def input_events_data(self) -> np.array:
+
+    @staticmethod  
+    def input_data(self) -> np.array:
         """This function returns a numpy array containing in every row the data 
         of a single event to be given as input to the neural network.
         Before stacking data inside an array, it is necessary to preprocess them.
@@ -123,6 +125,7 @@ class Xraydata():
         # Return the events_data list of arrays.
         return np.array(events_data)
 
+    @staticmethod
     def target_data(self) -> np.array:
         """This function returns a numpy array containing the target quantities
         extracted by the MC truth of the events. 
@@ -163,6 +166,8 @@ if __name__ == "__main__":
     # Creating an istance of the class Xraydata that contains the data preprocessing methods
     data = Xraydata(file_path)
     print(data)
+    input_data = data.input_events_data()
+    target_data = data.target_data()
 
     del data
 

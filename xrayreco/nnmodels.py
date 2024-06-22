@@ -26,19 +26,13 @@ def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
         its compatibility with the NN architecture).
     '''
     model_e = Sequential([
-                    Input(shape=input_shape),
-                    # Flattening the input
-                    Flatten(),
-                    # Performing the batch normalization
+                    Flatten(input_shape=(7,3)),
                     BatchNormalization(),
-                    Dense(64, activation='relu'),
-                    Dense(256, activation='relu'),
-                    Dense(128, activation='relu'),
-                    Dense(64, activation='relu'),
-                    Dense(32, activation='relu'),
-                    # Returning a single output
-                    # Using linear activation func for the regression task
-                    # Missing a Dropout layer, ask Rizzi []
+                    Dense(20, activation='relu'),
+                    Dense(50, activation='relu'),
+                    Dense(50, activation='relu'),
+                    Dense(50, activation='relu'),
+                    Dense(10, activation='relu'),
                     Dense(1, activation='linear')
                     ])
     # If provided, a .weights.h5 file is loaded into the model
@@ -74,19 +68,14 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
         its compatibility with the NN architecture).
     '''
     model_xy = Sequential([
-                    Input(shape=input_shape),
-                    # Flattening the input
+                    Input(shape=(7,3)),
                     Flatten(),
-                    # Performing the batch normalization
                     BatchNormalization(),
-                    Dense(64, activation='relu'),
-                    Dense(256, activation='relu'),
-                    Dense(128, activation='relu'),
-                    Dense(64, activation='relu'),
-                    Dense(32, activation='relu'),
-                    # Returning two outputs: (x, y)
-                    # Using linear activation func for the regression task
-                    # Missing a Dropout layer, ask Rizzi []
+                    Dense(30, activation='relu'),
+                    Dense(50, activation='relu'),
+                    Dense(100, activation='relu'),
+                    Dense(50, activation='relu'),
+                    Dense(30, activation='relu'),
                     Dense(2, activation='linear')
                     ])
     # If provided, a .weights.h5 file is loaded into the model
@@ -104,6 +93,43 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
     else:
         model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
     return model_xy
+
+
+def e_training_worker(input_data: np.array, target_data: np.array,
+                      checkpoint_path: str = None, **kwargs):
+    """Defining a training worker for multiprocess purposes
+    """
+    model_e = DNN_xy(path_to_weights=checkpoint_path)
+    # If the weights files already exist, they are loaded before training 
+    # in order to restart training from the last checkpoint
+    if checkpoint_path.exists() is True:
+        model_e.load_weights(checkpoint_path)
+    
+    # Creating the new checkpoints
+    cp_callback_e = ModelCheckpoint(filepath=checkpoint_path,
+                                    save_weights_only=True, verbose=1)
+    
+    # Training the NN 
+    history_e = model_e.fit(input_data, target_data, validation_split=0.05, epochs=20, callbacks=[cp_callback_e])
+    return history_e
+
+def xy_training_worker(input_data: np.array, target_data: np.array,
+                      checkpoint_path: str = None, **kwargs):
+    """Defining a training worker for multiprocess purposes
+    """
+    model_xy = DNN_e(path_to_weights=checkpoint_path)
+    # If the weights files already exist, they are loaded before training 
+    # in order to restart training from the last checkpoint
+    if checkpoint_path.exists() is True:
+        model_xy.load_weights(checkpoint_path)
+    
+    # Creating the new checkpoints
+    cp_callback_xy = ModelCheckpoint(filepath=checkpoint_path,
+                                    save_weights_only=True, verbose=1)
+    
+    # Training the NN 
+    history_xy = model_xy.fit(input_data, target_data, validation_split=0.05, epochs=20, callbacks=[cp_callback_xy])
+    return history_xy
 
 
 
