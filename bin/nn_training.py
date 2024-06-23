@@ -5,14 +5,13 @@ the hit coordinates of X-rays impinging the detector.
 from pathlib import Path
 import argparse
 
+import numpy as np
 from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
-import multiprocessing
-import numpy as np
 
 from xrayreco.preprocessing import Xraydata
 from xrayreco.nnmodels import DNN_e, DNN_xy
-#from hexsample.fileio import ReconInputFile
+from hexsample.fileio import ReconInputFile
 
 # Root folder of the package
 XRAYRECO_ROOT = (Path(__file__).parent).parent
@@ -30,10 +29,10 @@ parser.add_argument('--xyweights', type=str, default=None, help='Path to a\
                     .weghts.h5 file for loading already-present weights in the\
                     NN for hit position regression')
 parser.add_argument('--encheckpointpath', type=str, 
-                    default='training/cp_e_fulldata.weights.h5', help='Path to the\
+                    default='training/cp_e.weights.h5', help='Path to the\
                     checkpoint file for the energy NN')
 parser.add_argument('--xycheckpointpath', type=str, 
-                    default='training/cp_xy_fulldata.weights.h5', help='Path to the\
+                    default='training/cp_xy.weights.h5', help='Path to the\
                     checkpoint file for the hit position NN')
 
 if __name__ == "__main__":
@@ -78,27 +77,12 @@ if __name__ == "__main__":
     cp_callback_xy = ModelCheckpoint(filepath=xy_checkpoint_path,
                                      save_weights_only=True, verbose=1)
 
-    # Training the NNs concurrently
-    processes = []
-    for model, callback in [model_e, model_xy], [cp_callback_e, cp_callback_xy]:
-        training_kwargs = {'validation_split': 0.05, 'epochs': 50, 'callbacks' : [callback]}
-        p = multiprocessing.Process(target=model.fit, args=(full_input_dataset, target_energies,), kwargs=training_kwargs)
-        p.start()
-        processes.append(p)
-
-    # Now you can wait for the networks to finish training before executing the 
-    # rest of the script
-
-    for process in processes:
-        process.join()
-
-    '''
+    # Training the NNs
     history_e  = model_e.fit(full_input_dataset, target_energies,
                              validation_split=0.05, epochs=50, callbacks=[cp_callback_e])
     history_xy  = model_e.fit(full_input_dataset, target_xy,
                              validation_split=0.05, epochs=50, callbacks=[cp_callback_xy])
-    '''
-    '''
+
     # Plotting the loss trend over epochs for the energy
     plt.figure('Loss over epochs for energy NN')
     plt.plot(history_e.history['val_loss'], label='Validation loss')
@@ -110,17 +94,9 @@ if __name__ == "__main__":
     plt.plot(history_e.history['val_loss'], label='Validation loss')
     plt.plot(history_e.history['loss'], label='loss')
     plt.legend()
-    '''
     
     #That's all for this script, the comparison with the std reco is done in another script
     
     #Showing the pictures
     plt.show()
-
-
-
-
-
-
-    
 
