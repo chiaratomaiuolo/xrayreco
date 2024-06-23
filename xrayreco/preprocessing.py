@@ -103,8 +103,8 @@ class Xraydata():
         return self.input_file.root.header._v_attrs['outfile']
     
     def __repr__(self) -> str:
-        """Implementing repr() method. It shows general informations about the
-        simulation in file_path.
+        """Implementing repr() method. It shows general information about the
+        simulation in file_path stored in the Xraydata object.
         """
         print('General simulation information:')
         group_path = '/header'
@@ -113,22 +113,29 @@ class Xraydata():
             print(f'{attr_name}: {group._v_attrs[attr_name]}')
         return ''
     
-def processing_data(data: Xraydata) -> np.array:
-    """This function returns a numpy array containing in every row the data 
-    of a single event to be given as input to the neural network.
-    Before stacking data inside an array, it is necessary to preprocess them.
-    Central pixel position is converted from logical coordinates (col, row) to 
-    cartesian coordinates (x_max, y_max), PHA array is rearranged in a standard ordering. 
-    Consider the following legend: 
-    ur = up-right, r = right, dr = down-right, 
-    dl = down-left, l = left, ul = upper-left.
-    The output array has the data in the following order:
-    [central pha, ur pha, r pha, dr pha, dl pha, l pha, ul pha, central x, central y]
-    """
-    # Extrapolation of input data from the DigiEventCircular events
-    input_processed_data = []
-    target_processed_data = []
+def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
+    """This function takes as input an Xraydata object and processes its raw data
+    in order to extract the input and target datasets to be given to the NN
+    for training, evaluation and data prediction (in this case, cleary only the
+    input data are given)
 
+    Arguments
+    ---------
+    data : Xraydata
+        Xraydata object containing the raw data
+    
+    Return
+    ------
+    input_processed_data : np.array
+        Pre-processed input data for the NN. The shape of the array, is (n,7,3),
+        where n depends on the number of events in the Xraydata object.
+    target_processed_data : np.array
+        Pre-processed target data from the MC truth table to be used as target data
+        for NN training an evaluation. The shape of the array is (n,3), where 
+        n depends on the number of events in the Xraydata object.
+    """
+    # Defining the input data list to be filled in a for loop
+    input_processed_data = []
     # Saving the highest pixel coordinates for target coordinates rescaling.
     x_max = []
     y_max = []
@@ -168,6 +175,7 @@ if __name__ == "__main__":
     file_path = '/Users/chiara/hexsampledata/hxsim_20ENC.h5'
     # Creating an istance of the class Xraydata that contains the data preprocessing methods
     data = Xraydata(file_path)
+    #Printing the general information about the simulation stored in file_path
     repr(data)
     input_data, target_data = processing_data(data)
     print(input_data[0])
