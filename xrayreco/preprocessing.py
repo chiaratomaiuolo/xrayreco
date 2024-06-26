@@ -30,24 +30,24 @@ def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGri
         class containing the informations about the hexagonal grid features and
         the methods for localizing the neighbors of a given pixel.
     """
-    coordinates = [(column, row)] + [(c, r) for c, r in grid.neighbors(column, row)]
+    coordinates = [(column, row)] + list(grid.neighbors(column, row))
     return coordinates
 
 def highest_pixel_coordinates(self) -> np.array:
-        """This function returns a numpy array containing the physical coordinates
-        of the highest pixel (the one that defines the position of the cluster). 
-        This function is not useful for the NN intself, instead for performance 
-        evaluation tasks.
-        """
-        # Creating lists for storing the x and y coordinates
-        x = []
-        y = []
-        for evt in self.input_file:
-            x_tmp, y_tmp = self.grid.pixel_to_world(evt.column, evt.row)
-            x.append(x_tmp)
-            y.append(y_tmp)
-        return x, y
-
+    """This function returns a numpy array containing the physical coordinates
+    of the highest pixel (the one that defines the position of the cluster). 
+    This function is not useful for the NN intself, instead for performance 
+    evaluation tasks.
+    """
+    # Creating lists for storing the x and y coordinates
+    x = []
+    y = []
+    for evt in self.input_file:
+        x_tmp, y_tmp = self.grid.pixel_to_world(evt.column, evt.row)
+        x.append(x_tmp)
+        y.append(y_tmp)
+    return x, y
+# pylint: disable=locally-disabled, too-many-instance-attributes, unused-variable
 class Xraydata():
     """Class that preprocesses data from a .h5 file, creates the input arrays
     for the NN and provides an easy access to simulation information.
@@ -88,7 +88,7 @@ class Xraydata():
         self.mc_energy = np.array(self.input_file.mc_column('energy'))
         self.mc_x = np.array(self.input_file.mc_column('absx'))
         self.mc_y = np.array(self.input_file.mc_column('absy'))
-    
+
     def __del__(self):
         """Instance destructor. This is needed for the proper closing of the 
         input data file.
@@ -96,12 +96,12 @@ class Xraydata():
         # Closing the input file ...
         self.input_file.close()
         # ... and then deleting the class instance.
-    
+
     def __str__(self):
         """Implementing print(). It prints out the data file name.
         """
         return self.input_file.root.header._v_attrs['outfile']
-    
+
     def __repr__(self) -> str:
         """Implementing repr() method. It shows general information about the
         simulation in file_path stored in the Xraydata object.
@@ -112,7 +112,7 @@ class Xraydata():
         for attr_name in group._v_attrs._f_list():
             print(f'{attr_name}: {group._v_attrs[attr_name]}')
         return ''
-    
+# pylint: disable=locally-disabled, unused-variable
 def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
     """This function takes as input an Xraydata object and processes its raw data
     in order to extract the input and target datasets to be given to the NN
@@ -163,8 +163,8 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
         y_max.append(y[0])
     # Constructing target data: rescaling positions with respect to the central signal px
     # and zipping energy with (x, y) coordinates.
-    processed_target_coordinates = np.stack((list(zip(data.mc_x-x_max, data.mc_y-y_max))), axis=0)
-    processed_target_data = np.stack((list(zip(data.mc_energy, data.mc_x-x_max, data.mc_y-y_max))), axis=0)
+    processed_target_data = np.stack((list(zip(data.mc_energy, data.mc_x-x_max,
+                                               data.mc_y-y_max))), axis=0)
 
     # Return the events_data list of arrays.
     return np.array(input_processed_data), processed_target_data
@@ -180,21 +180,9 @@ def recon_data(recon_file_path: str) -> Tuple[np.array, np.array, np.array]:
 
     """
     recon_file = ReconInputFile(recon_file_path)
-    energy, x, y = recon_file.column('energy'), recon_file.column('posx'), recon_file.column('posy')
+    energy, x, y = recon_file.column('energy'),\
+                   recon_file.column('posx'),\
+                   recon_file.column('posy')
     # Closing file
     recon_file.close()
     return energy, x, y
-
-if __name__ == "__main__":
-    # Loading an hexsample simulation and storing its content into an Xraydata object
-    # The following simulation is a simulation with no electronic noise.
-    file_path = '/Users/chiara/hexsampledata/hxsim_20ENC.h5'
-    # Creating an istance of the class Xraydata that contains the data preprocessing methods
-    data = Xraydata(file_path)
-    #Printing the general information about the simulation stored in file_path
-    repr(data)
-    input_data, target_data = processing_data(data)
-    print(input_data[0])
-    print(target_data[0])
-    del data
-

@@ -9,13 +9,10 @@ from pathlib import Path
 import argparse
 
 import joblib
-from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
 import numpy as np
 
-from hexsample.fileio import ReconInputFile
-from scipy.optimize import curve_fit
-from xrayreco.fitfacilities import DoubleGauss, fit_doublegauss
+from xrayreco.fitfacilities import fit_doublegauss
 from xrayreco.preprocessing import Xraydata, processing_data, recon_data,\
                                    highest_pixel_coordinates
 from xrayreco.nnmodels import DNN_e, DNN_xy
