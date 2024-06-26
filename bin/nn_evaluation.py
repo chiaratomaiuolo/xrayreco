@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from xrayreco.fitfacilities import fit_doublegauss
-from xrayreco.preprocessing import Xraydata, processing_data, recon_data,\
+from xrayreco.preprocessing import Xraydata, processing_training_data, recon_data,\
                                    highest_pixel_coordinates
 from xrayreco.nnmodels import DNN_e, DNN_xy
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     recon_y = y_max - recon_y
 
     #Preprocessing test data for obtaining input and target ones
-    test_input_data, test_target_data = processing_data(test_data)
+    test_input_data, test_target_data = processing_training_data(test_data)
     # Loading training scaler and applying it on test data
     scaler = joblib.load(XRAYRECO_TRAINING / 'scaler.gz')
     X = scaler.fit_transform(test_input_data.reshape(-1, test_input_data.shape[-1]))\

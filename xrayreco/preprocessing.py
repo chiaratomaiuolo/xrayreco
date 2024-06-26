@@ -98,7 +98,7 @@ class Xraydata():
             print(f'{attr_name}: {group._v_attrs[attr_name]}')
         return ''
 # pylint: disable=locally-disabled, unused-variable
-def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
+def processing_training_data(data: Xraydata) -> Tuple[np.array, np.array]:
     """This function takes as input an Xraydata object and processes its raw data
     in order to extract the input and target datasets to be given to the NN
     for training, evaluation and data prediction (in this case, cleary only the
@@ -153,6 +153,48 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
 
     # Return the events_data list of arrays.
     return np.array(input_processed_data), processed_target_data
+
+# pylint: disable=locally-disabled, unused-variable
+def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
+    """This function takes as input an Xraydata object and processes its raw data
+    in order to extract the input and target datasets to be given to the NN
+    for training, evaluation and data prediction (in this case, cleary only the
+    input data are given)
+
+    Arguments
+    ---------
+    data : Xraydata
+        Xraydata object containing the raw data
+    
+    Return
+    ------
+    input_processed_data : np.array
+        Pre-processed input data for the NN. The shape of the array, is (n,7,3),
+        where n depends on the number of events in the Xraydata object.
+    """
+    # Defining the input data list to be filled in a for loop
+    input_processed_data = []
+    # Looping on events: extrapolating data and converting into required format
+    print(f'Processing raw data events from {data} dataset...\n')
+    for p, c, r in tqdm(zip(data.pha, data.columns, data.rows)):
+        # Storing of pixel's logical coordinates...
+        coordinates = circular_crown_logical_coordinates(c, r, data.grid)
+        # ... conversion from logical to ADC coordinates for standardizing the order ...
+        adc_channel_order = [data.grid.adc_channel(_col, _row) for _col, _row in coordinates]
+        # ... storing the re-ordered PHA list ...
+        ordered_p = p[adc_channel_order]
+        # ... separating x and y from coordinates tuples ...
+        x_logical, y_logical = zip(*coordinates)
+        # ... and converting from logical to physical coordinates ...
+        # (note that the function pixel_to_world() needs the conversion
+        # from tuples to numpy array)
+        x, y = data.grid.pixel_to_world(np.array(x_logical), np.array(y_logical))
+        # ... then stack the coordinates with its corresponding signal value
+        # and append the result to the data list.
+        input_processed_data.append(np.stack((list(zip(ordered_p, x-x[0], y-y[0]))), axis=0))
+
+    # Return the events_data list of arrays.
+    return np.array(input_processed_data)
 
 def highest_pixel_coordinates(data: Xraydata) -> np.array:
     """This function returns a numpy array containing the physical coordinates

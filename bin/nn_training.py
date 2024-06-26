@@ -11,9 +11,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-from xrayreco.preprocessing import Xraydata, processing_data
+from xrayreco.preprocessing import Xraydata, processing_training_data
 from xrayreco.nnmodels import DNN_e, DNN_xy
-from hexsample.fileio import ReconInputFile
 
 # Root folder of the package
 XRAYRECO_ROOT = (Path(__file__).parent).parent
@@ -26,18 +25,14 @@ XRAYRECO_TRAINING = XRAYRECO_ROOT / 'training'
 parser = argparse.ArgumentParser(description='Training of the neural networks\
                                  for the reconstruction of energy and position\
                                  of incident X-rays on the detector.')
-parser.add_argument('--enweights', type=str, default=None, help='Path to a\
-                    .weghts.h5 file for loading already-present weights in the\
-                    NN for energy regression')
-parser.add_argument('--xyweights', type=str, default=None, help='Path to a\
-                    .weghts.h5 file for loading already-present weights in the\
-                    NN for hit position regression')
 parser.add_argument('--encheckpointpath', type=str, 
-                    default='cp_e_fulldata.weights.h5', help='Path to the\
-                    checkpoint file for the energy NN')
+                    default='cp_e_fulldata.weights.h5', help='Name of the\
+                    checkpoint file for the energy NN to be found in the training\
+                    directory')
 parser.add_argument('--xycheckpointpath', type=str, 
-                    default='cp_xy_fulldata.weights.h5', help='Path to the\
-                    checkpoint file for the hit position NN')
+                    default='cp_xy_fulldata.weights.h5', help='Name of the\
+                    checkpoint file for the position NN to be found in the training\
+                    directory')
 
 if __name__ == "__main__":
     full_input_dataset = []
@@ -52,7 +47,7 @@ if __name__ == "__main__":
     datasets = [data_0ENC, data_20ENC, data_40ENC]
 
     for data in datasets:
-        input_data, output_data = processing_data(data)
+        input_data, output_data = processing_training_data(data)
         full_input_dataset.append(input_data)
         full_output_dataset.append(output_data)
     
