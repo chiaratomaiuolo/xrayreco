@@ -32,21 +32,6 @@ def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGri
     """
     coordinates = [(column, row)] + list(grid.neighbors(column, row))
     return coordinates
-
-def highest_pixel_coordinates(self) -> np.array:
-    """This function returns a numpy array containing the physical coordinates
-    of the highest pixel (the one that defines the position of the cluster). 
-    This function is not useful for the NN intself, instead for performance 
-    evaluation tasks.
-    """
-    # Creating lists for storing the x and y coordinates
-    x = []
-    y = []
-    for evt in self.input_file:
-        x_tmp, y_tmp = self.grid.pixel_to_world(evt.column, evt.row)
-        x.append(x_tmp)
-        y.append(y_tmp)
-    return x, y
 # pylint: disable=locally-disabled, too-many-instance-attributes, unused-variable
 class Xraydata():
     """Class that preprocesses data from a .h5 file, creates the input arrays
@@ -168,6 +153,21 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
 
     # Return the events_data list of arrays.
     return np.array(input_processed_data), processed_target_data
+
+def highest_pixel_coordinates(data: Xraydata) -> np.array:
+    """This function returns a numpy array containing the physical coordinates
+    of the highest pixel (the one that defines the position of the cluster). 
+    This function is not useful for the NN intself, instead for performance 
+    evaluation tasks.
+    """
+    # Creating lists for storing the x and y coordinates
+    x = []
+    y = []
+    for evt in data.input_file:
+        x_tmp, y_tmp = data.grid.pixel_to_world(evt.column, evt.row)
+        x.append(x_tmp)
+        y.append(y_tmp)
+    return x, y
 
 def recon_data(recon_file_path: str) -> Tuple[np.array, np.array, np.array]:
     """ Extracts the reconstructed quantities from a ReconInputFile.
