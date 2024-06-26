@@ -6,7 +6,7 @@ from typing import Tuple
 import numpy as np
 from tqdm import tqdm
 
-from hexsample.fileio import DigiInputFileCircular
+from hexsample.fileio import DigiInputFileCircular, ReconInputFile
 from hexsample.hexagon import HexagonalGrid, HexagonalLayout
 
 
@@ -141,7 +141,7 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
     y_max = []
     # Looping on events: extrapolating data and converting into required format
     print(f'Processing raw data events from {data} dataset...\n')
-    for p, r, c in tqdm(zip(data.pha, data.columns, data.rows)):
+    for p, c, r in tqdm(zip(data.pha, data.columns, data.rows)):
         # Storing of pixel's logical coordinates...
         coordinates = circular_crown_logical_coordinates(c, r, data.grid)
         # ... conversion from logical to ADC coordinates for standardizing the order ...
@@ -168,6 +168,19 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
 
     # Return the events_data list of arrays.
     return np.array(input_processed_data), processed_target_data
+
+def recon_data(recon_file_path: str) -> Tuple[np.array, np.array, np.array]:
+    """ Extracts the reconstructed quantities from a ReconInputFile.
+    Returns 3 arrays that are, respectively:
+    [reconstructed energy, reconstructed x_hit, reconstructed y_hit]
+    Arguments
+    ---------
+    recon_file_path : str
+        path to ReconInputFile
+
+    """
+    recon_file = ReconInputFile(recon_file_path)
+    return recon_file.column('energy'), recon_file.column('posx'), recon_file.column('posy')
 
 if __name__ == "__main__":
     # Loading an hexsample simulation and storing its content into an Xraydata object
