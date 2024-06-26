@@ -1,6 +1,8 @@
 ''' NN models definition
 '''
+from pathlib import Path
 from typing import Tuple
+
 
 import numpy as np
 
@@ -10,7 +12,7 @@ from keras.models import Model, Sequential
 from matplotlib import pyplot as plt
 
 
-def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
+def DNN_e(input_shape: Tuple=(7,3), path_to_weights: Path=None) -> Model:
     '''Definition of the Deep Neural Network model for energy reconstruction.
     This function defines the chosen architecture for the NN and returns the
     (untrained) keras.Model.
@@ -26,7 +28,7 @@ def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
         its compatibility with the NN architecture).
     '''
     model_e = Sequential([
-                    Flatten(input_shape=(7,3)),
+                    Flatten(input_shape=input_shape),
                     BatchNormalization(),
                     Dense(20, activation='relu'),
                     Dense(50, activation='relu'),
@@ -35,24 +37,29 @@ def DNN_e(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
                     Dense(10, activation='relu'),
                     Dense(1, activation='linear')
                     ])
+    
+    model_e.compile(optimizer='adam',loss='MSE')
     # If provided, a .weights.h5 file is loaded into the model
-    if path_to_weights is not None:
+    if path_to_weights.exists() is True:
         #Check compatibility
         try:
             model_e.load_weights(path_to_weights)
+            print('Loading weights from the provided checkpoint...')
+            print('Energy checkpoint loaded!')
+            return model_e
         except(ValueError):
+            print('The provided .weights.h5 file has wrong shape')
             #If the file is not compatible with the shape of the model, 
             # the model without any training is provided (as if 
             # path_to_weights wasn't provided).
-            model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
-            return model_e
-        model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
+            raise ValueError
     else:
-        model_e.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
-    return model_e
+        # If the file does not exist, a new training starts with a 'blank'
+        # model and the checkpoint file is created.
+        return model_e
 
 
-def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
+def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: Path=None) -> Model:
     '''Definition of the Deep Neural Network model for hit coordinates [x,y] 
     reconstruction. This function defines the chosen architecture for the NN
     and returns the (untrained) keras.Model.
@@ -68,7 +75,7 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
         its compatibility with the NN architecture).
     '''
     model_xy = Sequential([
-                    Input(shape=(7,3)),
+                    Input(shape=input_shape),
                     Flatten(),
                     BatchNormalization(),
                     Dense(30, activation='relu'),
@@ -78,21 +85,25 @@ def DNN_xy(input_shape: Tuple=(7,3), path_to_weights: str=None) -> Model:
                     Dense(30, activation='relu'),
                     Dense(2, activation='linear')
                     ])
+    model_xy.compile(optimizer='adam',loss='MSE')
     # If provided, a .weights.h5 file is loaded into the model
-    if path_to_weights is not None:
+    if path_to_weights.exists() is True:
         #Check compatibility
         try:
             model_xy.load_weights(path_to_weights)
+            print('Loading weights from the provided checkpoint...')
+            print('Position checkpoint loaded!')
+            return model_xy
         except(ValueError):
+            print('The provided .weights.h5 file has wrong shape')
             #If the file is not compatible with the shape of the model, 
             # the model without any training is provided (as if 
             # path_to_weights wasn't provided).
-            model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
-            return model_xy
-        model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
+            raise ValueError
     else:
-        model_xy.compile(optimizer='adam',loss='MSE',metrics=['accuracy'])
-    return model_xy
+        # If the file does not exist, a new training starts with a 'blank'
+        # model and the checkpoint file is created.
+        return model_xy
 
 
 def e_training_worker(input_data: np.array, target_data: np.array,
