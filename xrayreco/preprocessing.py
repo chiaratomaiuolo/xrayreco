@@ -180,7 +180,10 @@ def recon_data(recon_file_path: str) -> Tuple[np.array, np.array, np.array]:
 
     """
     recon_file = ReconInputFile(recon_file_path)
-    return recon_file.column('energy'), recon_file.column('posx'), recon_file.column('posy')
+    energy, x, y = recon_file.column('energy'), recon_file.column('posx'), recon_file.column('posy')
+    # Closing file
+    recon_file.close()
+    return energy, x, y
 
 if __name__ == "__main__":
     # Loading an hexsample simulation and storing its content into an Xraydata object
