@@ -7,10 +7,11 @@ import argparse
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
+import tqdm
 
 from hexsample.fileio import ReconInputFile
-from xrayreco.preprocessing import Xraydata, processing_data, recon_data,\
-                                   highest_pixel_coordinates
+from xrayreco.dataprocessing import Xraydata, processing_data, recon_data, \
+                            PredictedOutputFile, highest_pixel_coordinates, PredEvent
 from xrayreco.nnmodels import DNN_e, DNN_xy
 
 # Root folder of the package
@@ -57,7 +58,32 @@ if __name__ == '__main__':
     # ... rescaling it ...
     X = scaler.fit_transform(input_data.reshape(-1, input_data.shape[-1]))\
         .reshape(input_data.shape)
+
+    print(X[2])
+    print(X.shape)
     
-    # ... finally performing the prediction
-    predicted_e = model_e.fit(X)
-    predicted_xy = model_xy.fit(X)
+    # ... finally performing the prediction.
+    predicted_e = model_e.predict(X)
+    predicted_xy = model_xy.predict(X)
+
+    # Extracting the list containing the rescaling position in order to refer
+    # the prediction to the center of the grid, instead of the one of the 
+    # highest signal pixel.
+    x, y = highest_pixel_coordinates(raw_data)
+
+    # Opening a PredFile in order to store the results
+    output_filepath = args.rawdatafile.replace('.h5', f'_predicted.h5')
+    output_file = PredictedOutputFile(output_filepath)
+    output_file.update_digi_header(**raw_data.input_file.header)
+    for i, evt in enumerate(raw_data.input_file):
+        args = evt.trigger_id, evt.timestamp(), evt.livetime,\
+               predicted_e[i], predicted_xy[i,0]+x[i], predicted_xy[i,1]+y[i]
+        pred_event = PredEvent(*args)
+        
+        output_file.add_row(pred_event)
+   
+    output_file.flush()
+    raw_data.input_file.close()
+    output_file.close()
+    
+
