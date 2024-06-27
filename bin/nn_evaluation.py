@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from xrayreco.fitfacilities import fit_doublegauss
-from xrayreco.preprocessing import Xraydata, processing_training_data, recon_data,\
+from xrayreco.dataprocessing import Xraydata, processing_training_data, recon_data,\
                                    highest_pixel_coordinates
 from xrayreco.nnmodels import DNN_e, DNN_xy
 

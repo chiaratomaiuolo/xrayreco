@@ -1,6 +1,6 @@
 import unittest
 
-from xrayreco.preprocessing import Xraydata
+from xrayreco.dataprocessing import Xraydata
 
 
 class TestPreprocessingChain(unittest.TestCase):

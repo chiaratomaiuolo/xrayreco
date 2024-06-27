@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 
-from xrayreco.preprocessing import Xraydata, processing_training_data
+from xrayreco.dataprocessing import Xraydata, processing_training_data
 from xrayreco.nnmodels import DNN_e, DNN_xy
 
 # Root folder of the package
