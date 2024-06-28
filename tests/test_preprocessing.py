@@ -1,6 +1,6 @@
 import unittest
 
-from xrayreco.dataprocessing import Xraydata
+from xrayreco.dataprocessing import Xraydata, processing_data, processing_training_data
 
 
 class TestPreprocessingChain(unittest.TestCase):
@@ -12,8 +12,9 @@ class TestPreprocessingChain(unittest.TestCase):
         super(TestPreprocessingChain, self).__init__(*args, **kwargs)
         file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum_20enc_srcsigma200um.h5'
         self.data = Xraydata(file_path)
-        self.input_data = self.data.input_events_data()
-        self.target_data_energies, self.target_data_xy = self.data.target_data()
+        self.input_data, target_data = processing_training_data(self.data)
+        self.target_data_energies = target_data[:,0]
+        self.target_data_xy = [target_data[:,1], target_data[:,2]]
     
     def test_data_lenght(self):
         """Test for asserting the lenght of every preprocessed event of a simulation.

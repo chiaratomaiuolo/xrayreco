@@ -73,7 +73,7 @@ if __name__ == '__main__':
     output_filepath = args.rawdatafile.replace('.h5', f'_predicted.h5')
     output_file = PredictedOutputFile(output_filepath)
     output_file.update_digi_header(**raw_data.input_file.header)
-    logging.info('Filling datafile with events predictions...')
+    logger.info('Filling datafile with events predictions...')
     for i, evt in enumerate(raw_data.input_file):
         args = evt.trigger_id, evt.timestamp(), evt.livetime,\
                predicted_e[i], predicted_xy[i,0]+x[i], predicted_xy[i,1]+y[i]
@@ -81,7 +81,11 @@ if __name__ == '__main__':
         
         output_file.add_row(pred_event)
 
-    logger.info(f'Finished filling {output_filepath} with predicted data. Closing file.')
+    logger.info(f'Finished filling {output_filepath} with predicted data. Closing files.')
+
+    # Closing the input file ...
+    raw_data.close_file()
+    # ... cleaning the tables and closing the ouput file.
    
     output_file.flush()
     raw_data.input_file.close()

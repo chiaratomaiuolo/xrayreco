@@ -77,13 +77,10 @@ class Xraydata():
         self.mc_x = np.array(self.input_file.mc_column('absx'))
         self.mc_y = np.array(self.input_file.mc_column('absy'))
 
-    def __del__(self):
-        """Instance destructor. This is needed for the proper closing of the 
-        input data file.
+    def close_file(self):
+        """Closing the input file if needed
         """
-        # Closing the input file ...
         self.input_file.close()
-        # ... and then deleting the class instance.
 
     def __str__(self):
         """Implementing print(). It prints out the data file name.
@@ -100,11 +97,6 @@ class Xraydata():
         for attr_name in group._v_attrs._f_list():
             print(f'{attr_name}: {group._v_attrs[attr_name]}')
         return ''
-    
-    def close_file(self):
-        """Closing the input file if needed
-        """
-        self.input_file.close()
 
 # pylint: disable=locally-disabled, unused-variable
 def processing_training_data(data: Xraydata) -> Tuple[np.array, np.array]:

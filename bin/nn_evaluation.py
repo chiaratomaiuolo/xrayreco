@@ -119,8 +119,8 @@ if __name__ == "__main__":
     ax2.legend()
     
 
-    # Closing files
-    del test_data
+    # Closing file
+    test_data.close_file()
 
     plt.show()
 

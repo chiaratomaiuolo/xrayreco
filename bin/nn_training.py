@@ -85,9 +85,9 @@ if __name__ == "__main__":
     history_xy  = model_xy.fit(X_train, target_xy,
                              validation_split=0.05, epochs=40, callbacks=[cp_callback_xy])
     
-    # Closing files 
+    # Closing training files
     for data in datasets:
-        del data
+        data.close_file()
 
     # Plotting the loss trend over epochs for the energy
     plt.figure('Loss over epochs for energy NN')
