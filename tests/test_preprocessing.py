@@ -1,7 +1,33 @@
 import unittest
 
-from xrayreco.dataprocessing import Xraydata, processing_training_data
+from hexsample.hexagon import HexagonalGrid, HexagonalLayout
+from xrayreco.dataprocessing import adc_channel_odd_r, circular_crown_logical_coordinates, \
+                            processing_training_data, Xraydata
 
+SAMPLE_PIXELS = ((6, 6), (10, 2), (4, 2), (2, 6), (13, 2), (7, 2), (1, 2))
+ORDERINGS_DICT = {0: [0, 5, 1, 3, 2, 6, 4],
+                  1: [1, 6, 2, 4, 3, 0, 5],
+                  2: [2, 0, 3, 5, 4, 1, 6],
+                  3: [3, 1, 4, 6, 5, 2, 0],
+                  4: [4, 2, 5, 0, 6, 3, 1],
+                  5: [5, 3, 6, 1, 0, 4, 2],
+                  6: [6, 4, 0, 2, 1, 5, 3]}
+
+class TestTrackReordering(unittest.TestCase):
+    def __init__(self, *args, **kwargs):
+        # Initializing a 10x15 ODD_R hexagonal grid for testing
+        super(TestTrackReordering, self).__init__(*args, **kwargs)
+        self.grid = HexagonalGrid(layout=HexagonalLayout.ODD_R, num_cols=10,\
+                             num_rows=15, pitch=60.)
+    def test_adc_reordering(self):
+        for i in range(7):
+            # Storing of pixel's logical coordinates...
+            c, r = SAMPLE_PIXELS[i]
+            coordinates = circular_crown_logical_coordinates(c, r, self.grid)
+            # ... conversion from logical to ADC coordinates for standardizing the order ...
+            adc_channel_order = [adc_channel_odd_r(_col, _row) for _col, _row in coordinates]
+            self.assertEqual(ORDERINGS_DICT[i], adc_channel_order)
+            print(f'Ordering for track having central pixel {i} checked!')
 
 class TestPreprocessingChain(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -51,6 +77,7 @@ class TestPreprocessingChain(unittest.TestCase):
             print(f'Event number {n}: target data = {self.target_data_energies[n]},\
                    {self.target_data_xy[n]}')
         self.data.close_file()
+
     
 
 if __name__ == "__main__":
