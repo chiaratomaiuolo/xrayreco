@@ -1,6 +1,6 @@
 import unittest
 
-from xrayreco.dataprocessing import Xraydata, processing_data, processing_training_data
+from xrayreco.dataprocessing import Xraydata, processing_training_data
 
 
 class TestPreprocessingChain(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestPreprocessingChain(unittest.TestCase):
         self.data = Xraydata(file_path)
         self.input_data, target_data = processing_training_data(self.data)
         self.target_data_energies = target_data[:,0]
-        self.target_data_xy = [target_data[:,1], target_data[:,2]]
+        self.target_data_xy = target_data[:,1:]
     
     def test_data_lenght(self):
         """Test for asserting the lenght of every preprocessed event of a simulation.
@@ -25,6 +25,7 @@ class TestPreprocessingChain(unittest.TestCase):
         # for the neural network
         for evt in self.input_data:
             self.assertEqual(len(evt), 7)
+        self.data.close_file()
     
     def test_targetevts_len(self):
         """Test for asserting the lenght of every preprocessed event of a simulation.
@@ -34,8 +35,10 @@ class TestPreprocessingChain(unittest.TestCase):
         # Preprocessing a .h5 simulation file and extrapolating the input data 
         # for the neural network
         for evt_e, evt_xy in zip(self.target_data_energies, self.target_data_xy):
+            # Asserting that energies are scalars
             self.assertTrue(not hasattr(evt_e, '__len__'))
             self.assertEqual(len(evt_xy), 2)
+        self.data.close_file()
     
     def test_printing_events(self):
         """Test for printing few preprocessed events in order to check if the 
@@ -45,7 +48,9 @@ class TestPreprocessingChain(unittest.TestCase):
         # is as expected.
         for n in range(3):
             print(f'Event number {n}: input data = {self.input_data[n]}')
-            print(f'Event number {n}: target data = {self.target_data_energies[n]}, {self.target_data_xy[n]}')
+            print(f'Event number {n}: target data = {self.target_data_energies[n]},\
+                   {self.target_data_xy[n]}')
+        self.data.close_file()
     
 
 if __name__ == "__main__":
