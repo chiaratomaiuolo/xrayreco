@@ -85,7 +85,7 @@ class Xraydata():
     def __str__(self):
         """Implementing print(). It prints out the data file name.
         """
-        return self.input_file.root.header._v_attrs['outfile']
+        return str(self.input_file.root.header._v_attrs['outfile'])
 
     def __repr__(self) -> str:
         """Implementing repr() method. It shows general information about the
