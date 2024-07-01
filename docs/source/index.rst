@@ -12,8 +12,10 @@ Contents
 --------
 .. toctree::
    usage
-   preprocessing
+   dataprocessing
    nnmodels
+   fitfacilities
+   predfile
 
 
 
