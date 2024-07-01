@@ -7,9 +7,28 @@ import numpy as np
 import tables
 from tqdm import tqdm
 
-from hexsample.fileio import DigiInputFileCircular, FileType, OutputFileBase, \
-                             ReconInputFile
+from hexsample.fileio import DigiInputFileCircular, ReconInputFile
 from hexsample.hexagon import HexagonalGrid, HexagonalLayout
+
+# Defining the 'magic sequences' of routing of the hexagonal grid in ODD_R layout
+_N_ADC_CHANNELS = 7
+_ADC_SEQUENCE_ODD = (0, 3, 5, 1, 3, 6, 1, 4, 6, 2, 4, 0, 2, 5)
+_ADC_SEQUENCE_LENGTH = len(_ADC_SEQUENCE_ODD)
+
+def adc_channel_odd_r(col: int, row: int) -> int:
+    """Transformation from offset coordinates (col, row) into 7-adc channel label,
+    that is an int between 0 and 6, for ODD_R grid layout.
+
+    Arguments
+    ---------
+    col: int
+        column pixel logical coordinate
+    row: int
+        row pixel logical coordinate
+    """
+    start = _ADC_SEQUENCE_ODD[row % _ADC_SEQUENCE_LENGTH]
+    index = (col + start) % _N_ADC_CHANNELS
+    return index
 
 
 def circular_crown_logical_coordinates(column: int, row: int, grid: HexagonalGrid)\
@@ -131,7 +150,7 @@ def processing_training_data(data: Xraydata) -> Tuple[np.array, np.array]:
         # Storing of pixel's logical coordinates...
         coordinates = circular_crown_logical_coordinates(c, r, data.grid)
         # ... conversion from logical to ADC coordinates for standardizing the order ...
-        adc_channel_order = [data.grid.adc_channel(_col, _row) for _col, _row in coordinates]
+        adc_channel_order = [adc_channel_odd_r(_col, _row) for _col, _row in coordinates]
         # ... storing the re-ordered PHA list ...
         ordered_p = p[adc_channel_order]
         # ... separating x and y from coordinates tuples ...
@@ -181,7 +200,7 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
         # Storing of pixel's logical coordinates...
         coordinates = circular_crown_logical_coordinates(c, r, data.grid)
         # ... conversion from logical to ADC coordinates for standardizing the order ...
-        adc_channel_order = [data.grid.adc_channel(_col, _row) for _col, _row in coordinates]
+        adc_channel_order = [adc_channel_odd_r(_col, _row) for _col, _row in coordinates]
         # ... storing the re-ordered PHA list ...
         ordered_p = p[adc_channel_order]
         # ... separating x and y from coordinates tuples ...
