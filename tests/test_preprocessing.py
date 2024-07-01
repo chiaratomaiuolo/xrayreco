@@ -15,7 +15,7 @@ ORDERINGS_DICT = {0: [0, 5, 1, 3, 2, 6, 4],
 
 class TestTrackReordering(unittest.TestCase):
     def __init__(self, *args, **kwargs):
-        # Initializing a 10x15 ODD_R hexagonal grid for testing
+        # Initializing a 10x15 ODD_R hexagonal grid for testing ...
         super(TestTrackReordering, self).__init__(*args, **kwargs)
         self.grid = HexagonalGrid(layout=HexagonalLayout.ODD_R, num_cols=10,\
                              num_rows=15, pitch=60.)
