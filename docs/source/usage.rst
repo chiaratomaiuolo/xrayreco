@@ -1,15 +1,6 @@
 Usage
 =====
 
-Overview
---------
-In the following package the training and evaluation of Neural Networks for
-reconstructing the energy and the position of X-ray signals on a solid-state
-detector having an hexagonal grid of pixels as reaodut.  
-The training weights have been saved and stored in the repository, so that the 
-NNs can be used for future predictions of this kind of signals.
-
-
 Installation
 ------------
 
