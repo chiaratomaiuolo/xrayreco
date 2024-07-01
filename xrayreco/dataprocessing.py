@@ -1,10 +1,8 @@
 """Preprocessing functions.
 """
-from dataclasses import dataclass
 from typing import Tuple
 
 import numpy as np
-import tables
 from tqdm import tqdm
 
 from hexsample.fileio import DigiInputFileCircular, ReconInputFile
