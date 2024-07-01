@@ -18,6 +18,10 @@ _ADC_SEQUENCE_LENGTH = len(_ADC_SEQUENCE_ODD)
 def adc_channel_odd_r(col: int, row: int) -> int:
     """Transformation from offset coordinates (col, row) into 7-adc channel label,
     that is an int between 0 and 6, for ODD_R grid layout.
+    This is based on the 'magic sequence' that localize columns and rows for a 
+    7-routed hexagonal grid:
+    Rows in the order of this sequence: (0, 3, 5, 1, 3, 6, 1, 4, 6, 2, 4, 0, 2, 5),
+    Columns in increasing order: (0, 1, 2, 3, 4, 5, 6)
 
     Arguments
     ---------
