@@ -1,15 +1,10 @@
-"""Preprocessing functions.
+"""File structure for saving the NN predictions in a .h5 file.
 """
 from dataclasses import dataclass
-from typing import Tuple
 
-import numpy as np
 import tables
-from tqdm import tqdm
 
-from hexsample.fileio import DigiInputFileCircular, FileType, OutputFileBase, \
-                             ReconInputFile
-from hexsample.hexagon import HexagonalGrid, HexagonalLayout
+from hexsample.fileio import FileType, OutputFileBase
 
 @dataclass
 class PredEvent:
