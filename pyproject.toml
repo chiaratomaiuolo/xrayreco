@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+requires-python = ">=3.7"
+
+[project]
+name = "xrayreco"
+version = "0.1"
+dependencies = [
+    "sphinx",
+    "sphinxawesome_theme",
+    argparse,
+    joblib,
+    keras,
+    loguru,
+    matplotlib,
+    numpy,
+    pathlib,
+    sklearn.preprocessing,
+    tables,
+    tqdm,
+    typing,
+    unittest
+]
