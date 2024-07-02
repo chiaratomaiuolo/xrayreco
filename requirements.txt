@@ -6,7 +6,7 @@ loguru
 matplotlib
 numpy
 pathlib
-sklearn.preprocessing
+scikit-learn
 tables
 tqdm
 typing
