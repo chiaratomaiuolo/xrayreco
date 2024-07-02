@@ -8,12 +8,5 @@ name = "xrayreco"
 version = "0.1"
 dependencies = [
     "sphinx",
-    "sphinxawesome_theme",
-    "keras",
-    "matplotlib",
-    "numpy",
-    "pathlib",
-    "scikit-learn",
-    "tables",
-    "tqdm"
+    "sphinxawesome_theme"
 ]
