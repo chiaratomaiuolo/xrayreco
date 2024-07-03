@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'xray_hit_reconstruction'
+project = 'xrayreco'
 copyright = '2024, Chiara Tomaiuolo'
 author = 'Chiara Tomaiuolo'
 
