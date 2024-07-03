@@ -97,15 +97,52 @@
 </nav>
 <div id="content" role="main">
 <section id="xrayreco-fitfacilities-fit-facilities-for-nn-performance-evaluation-purpose">
-<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">xrayreco.fitfacilities</span></code> — Fit facilities for NN performance evaluation purpose<a class="headerlink" href="#xrayreco-fitfacilities-fit-facilities-for-nn-performance-evaluation-purpose" title="Link to this heading">¶</a></h1>
-<section id="module-documentation">
-<h2>Module documentation<a class="headerlink" href="#module-documentation" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-documentation'">¶</a></h2>
+<h1><a class="reference internal" href="#module-xrayreco.fitfacilities" title="xrayreco.fitfacilities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">xrayreco.fitfacilities</span></code></a> — Fit facilities for NN performance evaluation purpose<a class="headerlink" href="#xrayreco-fitfacilities-fit-facilities-for-nn-performance-evaluation-purpose" title="Link to this heading">¶</a></h1>
+<section id="module-xrayreco.fitfacilities">
+<span id="module-documentation"></span><h2>Module documentation<a class="headerlink" href="#module-xrayreco.fitfacilities" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-xrayreco.fitfacilities'">¶</a></h2>
+<p>Fit models and fit functions for data analysis purpose</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="xrayreco.fitfacilities.Gauss">
+<span class="sig-prename descclassname"><span class="pre">xrayreco.fitfacilities.</span></span><span class="sig-name descname"><span class="pre">Gauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#xrayreco.fitfacilities.Gauss" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#xrayreco.fitfacilities.Gauss'">¶</a></dt>
+<dd><p>Gaussian model for fitting purposes</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="xrayreco.fitfacilities.DoubleGauss">
+<span class="sig-prename descclassname"><span class="pre">xrayreco.fitfacilities.</span></span><span class="sig-name descname"><span class="pre">DoubleGauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#xrayreco.fitfacilities.DoubleGauss" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#xrayreco.fitfacilities.DoubleGauss'">¶</a></dt>
+<dd><p>Double Gaussian model (sum of two Gaussian models) for fitting purposes.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="xrayreco.fitfacilities.fit_doublegauss">
+<span class="sig-prename descclassname"><span class="pre">xrayreco.fitfacilities.</span></span><span class="sig-name descname"><span class="pre">fit_doublegauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">array</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#xrayreco.fitfacilities.fit_doublegauss" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#xrayreco.fitfacilities.fit_doublegauss'">¶</a></dt>
+<dd><p>Fits a distribution with a DoubleGaussian model, plots the distribution histogram
+and the fitted curve with a legend box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>np.array</em><em> or </em><em>array-like</em>) – Array of values of the distribution to be fitted</p></li>
+<li><p><strong>bins</strong> (<em>int=50</em>) – Number of bins for the histogram to be created</p></li>
+<li><p><strong>p0</strong> (<em>np.array</em><em> or </em><em>array-like=None</em>) – Array of 6 elements containing the initial parameters of the DoubleGaussian
+for the fit. If None is provided, the initial parameters will be set to:
+[max(content), 8046., 100., max(content[bins[0:-1]&gt;8600]), 8904, 100], where
+content is the array containing the counts of the binned quantity x, the mean
+values for the Gaussian peaks are taken as the Ka and Kb of a Cu source (that
+is the standard dataset used for the evaluation of the NN performance).</p></li>
+<li><p><strong>label</strong> (<em>str=None</em>) – Label string to be inserted in the plot with the optimal parameters of the fit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 </section>
 </section>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#module-documentation'" class="reference internal" href="#module-documentation">Module documentation</a></li>
+<li><a :data-current="activeSection === '#module-xrayreco.fitfacilities'" class="reference internal" href="#module-xrayreco.fitfacilities">Module documentation</a><ul>
+<li><a :data-current="activeSection === '#xrayreco.fitfacilities.Gauss'" class="reference internal" href="#xrayreco.fitfacilities.Gauss"><code class="docutils literal notranslate"><span class="pre">Gauss()</span></code></a></li>
+<li><a :data-current="activeSection === '#xrayreco.fitfacilities.DoubleGauss'" class="reference internal" href="#xrayreco.fitfacilities.DoubleGauss"><code class="docutils literal notranslate"><span class="pre">DoubleGauss()</span></code></a></li>
+<li><a :data-current="activeSection === '#xrayreco.fitfacilities.fit_doublegauss'" class="reference internal" href="#xrayreco.fitfacilities.fit_doublegauss"><code class="docutils literal notranslate"><span class="pre">fit_doublegauss()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </aside>
