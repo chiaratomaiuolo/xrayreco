@@ -6,7 +6,7 @@ from typing import Tuple
 
 import numpy as np
 
-from keras.layers import Input, Flatten, Dense, Dropout, BatchNormalization
+from keras.layers import Input, Flatten, Dense, BatchNormalization
 from keras.callbacks import ModelCheckpoint
 from keras.models import Model, Sequential
 from matplotlib import pyplot as plt

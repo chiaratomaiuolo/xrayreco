@@ -11,8 +11,7 @@ import numpy as np
 import tqdm
 
 from hexsample.fileio import ReconInputFile
-from xrayreco.dataprocessing import Xraydata, processing_data, recon_data, \
-                                    highest_pixel_coordinates
+from xrayreco.dataprocessing import Xraydata, processing_data, highest_pixel_coordinates
 from xrayreco.predfile import PredictedOutputFile, PredEvent
 from xrayreco.nnmodels import DNN_e, DNN_xy
 
