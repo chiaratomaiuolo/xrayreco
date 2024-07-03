@@ -8,6 +8,5 @@ py-modules = []
 name = "xrayreco"
 version = "0.1"
 dependencies = [
-    "sphinx",
     "sphinxawesome_theme"
 ]

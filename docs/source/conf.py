@@ -17,7 +17,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.napoleon']
 
 templates_path = ['_templates']
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 autodoc_default_options = {
     'members': True,
