@@ -9,5 +9,11 @@ py-modules = ["xrayreco"]
 name = "xrayreco"
 version = "0.1"
 dependencies = [
-    "sphinxawesome_theme"
+    "sphinxawesome_theme",
+    "matplotlib",
+    "numpy",
+    "tables",
+    "tqdm",
+    "scipy",
+    "keras"
 ]
