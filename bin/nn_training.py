@@ -8,8 +8,9 @@ import argparse
 import numpy as np
 from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
+import multiprocess
 
-from xrayreco.preprocessing import Xraydata
+from xrayreco.preprocessing import Xraydata, processing_data
 from xrayreco.nnmodels import DNN_e, DNN_xy
 from hexsample.fileio import ReconInputFile
 
@@ -35,24 +36,35 @@ parser.add_argument('--xycheckpointpath', type=str,
                     default='training/cp_xy.weights.h5', help='Path to the\
                     checkpoint file for the hit position NN')
 
+def process_data_worker(datafile: Xraydata, q1: multiprocess.Queue,
+                        q2: multiprocess.Queue):
+    input_data, target_data = processing_data(datafile)
+    q1.put(input_data)
+    #q2.put(target_data)
+
 if __name__ == "__main__":
     # Collecting the arguments from the argument parser
     args = parser.parse_args()
     # Storing the datasets. Using 3 simulations, with 0,20,40 ENC for single px
-    data_0ENC = Xraydata(XRAYRECO_DATA / 'hxsim_0ENC.h5')
-    data_20ENC = Xraydata(XRAYRECO_DATA / 'hxsim_20ENC.h5')
-    data_40ENC = Xraydata(XRAYRECO_DATA / 'hxsim_40ENC.h5')
+    data_0ENC = Xraydata(XRAYRECO_DATA / 'hxsim0ENC_100evts.h5')
+   # data_20ENC = Xraydata(XRAYRECO_DATA / 'hxsim_20ENC.h5')
+    #data_40ENC = Xraydata(XRAYRECO_DATA / 'hxsim_40ENC.h5')
     # Creating a list in order to loop over datasets
-    datasets = [data_20ENC, data_40ENC]
-    full_input_dataset = data_0ENC.input_events_data()
-    full_output_dataset = data_0ENC.target_data()
+    #datasets = [data_0ENC, data_20ENC, data_40ENC]
+    full_input_dataset = []
+    full_output_dataset = []
     # Storing all input and output data inside a single overall dataset
-    for data in datasets:
-        full_input_dataset = np.append(full_input_dataset, data.input_events_data(),
-                                       axis=0)
-        full_output_dataset = np.append(full_output_dataset, data.target_data(),
-                                       axis=0)
+    q = multiprocess.Queue()
+    q2 = multiprocess.Queue()
+    p = multiprocess.Process(target=process_data_worker, args=(data_0ENC, q, q2,))
+    p.start()
+    p.join()
+
+    while not q.empty():
+        full_input_dataset.append(q.get())
     
+    print(full_input_dataset)
+    '''
     #Dividing the energy and hit position target data (just for clarity)
     target_energies = full_output_dataset[:,0]
     target_xy = full_output_dataset[:,1:]
@@ -99,4 +111,6 @@ if __name__ == "__main__":
     
     #Showing the pictures
     plt.show()
+'''
+    
 
