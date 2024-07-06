@@ -156,11 +156,11 @@ def processing_training_data(data: Xraydata) -> Tuple[np.array, np.array]:
         # ... storing the re-ordered PHA list ...
         ordered_p = p[adc_channel_order]
         # ... separating x and y from coordinates tuples ...
-        x_logical, y_logical = zip(*coordinates)
+        col_logical, row_logical = zip(*coordinates)
         # ... and converting from logical to physical coordinates ...
         # (note that the function pixel_to_world() needs the conversion
         # from tuples to numpy array)
-        x, y = data.grid.pixel_to_world(np.array(x_logical), np.array(y_logical))
+        x, y = data.grid.pixel_to_world(np.array(col_logical), np.array(row_logical))
         # ... then stack the coordinates with its corresponding signal value
         # and append the result to the data list.
         input_processed_data.append(np.stack((list(zip(ordered_p, x-x[0], y-y[0]))), axis=0))
@@ -206,11 +206,11 @@ def processing_data(data: Xraydata) -> Tuple[np.array, np.array]:
         # ... storing the re-ordered PHA list ...
         ordered_p = p[adc_channel_order]
         # ... separating x and y from coordinates tuples ...
-        x_logical, y_logical = zip(*coordinates)
+        col_logical, row_logical = zip(*coordinates)
         # ... and converting from logical to physical coordinates ...
         # (note that the function pixel_to_world() needs the conversion
         # from tuples to numpy array)
-        x, y = data.grid.pixel_to_world(np.array(x_logical), np.array(y_logical))
+        x, y = data.grid.pixel_to_world(np.array(col_logical), np.array(row_logical))
         # ... then stack the coordinates with its corresponding signal value
         # and append the result to the data list.
         input_processed_data.append(np.stack((list(zip(ordered_p, x-x[0], y-y[0]))), axis=0))

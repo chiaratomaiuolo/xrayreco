@@ -38,6 +38,7 @@ class TestPreprocessingChain(unittest.TestCase):
         super(TestPreprocessingChain, self).__init__(*args, **kwargs)
         file_path = '/Users/chiara/hexsampledata/sim_HexagonalLayout.ODD_Rum_20enc_srcsigma200um.h5'
         self.data = Xraydata(file_path)
+        repr(self.data)
         self.input_data, target_data = processing_training_data(self.data)
         self.target_data_energies = target_data[:,0]
         self.target_data_xy = target_data[:,1:]
