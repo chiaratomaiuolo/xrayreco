@@ -50,8 +50,8 @@ if __name__ == "__main__":
     # Extracting the highest pixel coordinates for reconstructed position rescaling
     # and performing the rescaling.
     x_max, y_max = highest_pixel_coordinates(test_data)
-    recon_x = x_max - recon_x
-    recon_y = y_max - recon_y
+    recon_x = recon_x - x_max 
+    recon_y = recon_y - y_max
 
     #Preprocessing test data for obtaining input and target ones
     test_input_data, test_target_data = processing_training_data(test_data)
@@ -68,27 +68,26 @@ if __name__ == "__main__":
     predicted_energies = model_e.predict(X)
     predicted_xy = model_xy.predict(X)
 
-    content, bins = np.histogram(predicted_energies, bins=50)
+    #content, bins = np.histogram(predicted_energies, bins=20)
     
-    errors = np.sqrt(content) # errors on hist
-    errors[errors==0] = 1
+    #errors = np.sqrt(content) # errors on hist
+    #errors[errors==0] = 1
+    print(f'len recon {len(recon_e)}, len pred {len(predicted_energies)}')
 
     # Fitting the energy for both predicted and reconstructed histograms
     plt.figure()
-    fit_doublegauss(recon_e, label='Reconstructed energy')
-    fit_doublegauss(predicted_energies, label='NN prediction')
+    fit_doublegauss(recon_e, label='Analytic recon')
+    fit_doublegauss(predicted_energies, label='NN recon')
     plt.annotate(r'$E_{K\alpha} = 8046$ eV',
-            xy=(8000, 4000), xycoords='data',
-            xytext=(-120, 0), textcoords='offset points',
-            size=18, va='center',
+            xy=(7500, 4000), xycoords='data',
+            size=12, va='center',
             bbox=dict(boxstyle='round', fc='1', ec='k'))
-    plt.axvline(8046, linewidth=3, color='k')
+    plt.axvline(8046, linewidth=2, color='k', linestyle='dashed')
     plt.annotate(r'$E_{K\beta} = 8906$ eV',
             xy=(9000, 1000), xycoords='data',
-            xytext=(0, 0), textcoords='offset points',
-            size=18, va='center',
-            bbox=dict(boxstyle='round', fc='1', ec='k'))
-    plt.axvline(8906, linewidth=3, color='k')
+            size=12, va='center',
+            bbox=dict(boxstyle='round', fc='1', ec='tab:pink'))
+    plt.axvline(8906, linewidth=2, color='tab:pink', linestyle='dashed')
     plt.legend()
 
     # Evaluating the position stats:
@@ -101,22 +100,23 @@ if __name__ == "__main__":
     pred_res_y = predicted_xy[:,1]-test_target_data[:,2]
     # Plotting the distributions
     f, (ax1, ax2) = plt.subplots(ncols=2)
-    ax1.hist(recon_res_x, bins=50, label='Recon x - MC x \n' +
-             rf'$\mu = {np.mean(recon_res_x):.3f}$' + '\n' +
-             rf'$\sigma = {np.std(recon_res_x):.3f}$')
-    ax1.hist(pred_res_x, bins=50, label='Predicted x - MC x \n' +
-             rf'$\mu = {np.mean(pred_res_x):.3f}$' + '\n' +
-             rf'$\sigma = {np.std(pred_res_x):.3f}$')
-    ax1.set(xlabel=r'$x-x_{MC}$ [cm]', ylabel='Counts')
+    ax1.hist(recon_res_x*10000, bins=50, label='Recon x - MC x \n' +
+             rf'$\sigma = {np.std(recon_res_x)*10000:.1f}$')
+    ax1.hist(pred_res_x*10000, bins=50, label='Predicted x - MC x \n' +
+             rf'$\sigma = {np.std(pred_res_x)*10000:.1f}$')
+    ax1.set(xlabel=r'$x-x_{MC}$ [$\mu$m]', ylabel='Counts')
     ax1.legend()
-    ax2.hist(recon_res_y, bins=50, label='Recon y - MC y \n' +
-             rf'$\mu = {np.mean(recon_res_y):.3f}$' + '\n' +
-             rf'$\sigma = {np.std(recon_res_y):.3f}$')
-    ax2.hist(pred_res_y, bins=50, label='Predicted x - MC x \n' +
-             rf'$\mu = {np.mean(pred_res_y):.3f}$' + '\n' +
-             rf'$\sigma = {np.std(pred_res_y):.3f}$')
-    ax2.set(xlabel=r'$y-y_{MC}$ [cm]', ylabel='Counts')
+    ax2.hist(recon_res_y*10000, bins=50, label='Recon y - MC y \n' +
+             rf'$\sigma = {np.std(recon_res_y)*10000:.1f}$')
+    ax2.hist(pred_res_y*10000, bins=50, label='Predicted x - MC x \n' +
+             rf'$\sigma = {np.std(pred_res_y)*10000:.1f}$')
+    ax2.set(xlabel=r'$y-y_{MC}$ [$\mu$m]', ylabel='Counts')
     ax2.legend()
+
+    dist = np.sqrt(pred_res_x**2 + pred_res_y**2)
+    dist_reco = np.sqrt(recon_res_x**2 + recon_res_y**2)
+    print(f'PRED The average distance is: {np.mean(dist)}, the std is {np.std(dist)}')
+    print(f'RECON The average distance is: {np.mean(dist_reco)}, the std is {np.std(dist_reco)}')
     
 
     # Closing file
